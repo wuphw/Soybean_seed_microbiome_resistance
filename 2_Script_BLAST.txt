@@ -1,0 +1,25 @@
+#make database 
+#the database was merged of 16S_ribosomal_RNA and SSU_eukaryote_rRNA
+
+makeblastdb -dbtype nucl -in ASV_seedendo.fasta
+
+makeblastdb -dbtype nucl -in /Users/Orange/Downloads/16s.fa
+
+
+#Merge NCBI 16sref database
+
+blastdb_aliastool -dblist "16S_ribosomal_RNA SSU_eukaryote_rRNA" -dbtype nucl -out 16SrRNA -title "16S+eukaSSU"
+
+#set up working rout, out blast database under same folder
+cd /Users/Orange/Desktop/dada2_data
+
+
+#BlastN 0801ASV
+blastn -query ASV.fasta -db /Users/Orange/blastdatabase/16SrRNA -evalue 1e-5 -outfmt 11 -num_threads 8 -out blast_ASV.asn1
+
+blast_formatter -archive blast_ASV.asn1 -outfmt '6 qseqid sseqid pident length qlen slen mismatch staxids qstart qend sstart send evalue bitscore sscinames' -out blastresult_ASV.txt -max_target_seqs 5
+
+echo -e "qseqid\tsseqid\tpident\tlength\tqlen\tslen\tmismatch\tstaxids\tqstart\tqend\tsstart\tsend\tevalue\tbitscore\tsscinames" > all.16S.1e-5.besthit.txt
+
+sort -t $'\t' -k1,1 -k14,14nr -k13,13n -k3,3nr blastresult_ASV.txt | sort -u -k1,1 --merge >>all.16S.1e-5.besthit.txt
+
