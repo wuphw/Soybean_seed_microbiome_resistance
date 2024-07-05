@@ -57,8 +57,7 @@ ASV_table_final<-otu_feature_table %>%
 write.csv(ASV_table_final,"./ASV_table_final.csv")
 
 #BLAST identity
-BLAST_raw<-rio::import("./ASV/ASV_dada0802.xlsx", which = 3)
-BLAST_filtered<-rio::import("./ASV/ASV_dada0802.xlsx", which = 4)
+BLAST_raw<-rio::import("./ASV_table_final.xlsx", which = 3)
 
 gghistogram(BLAST_raw, x = "pident",
             #add = "mean", 
@@ -71,16 +70,5 @@ gghistogram(BLAST_raw, x = "pident",
         axis.text.y = element_text(angle=90,hjust=0.5))
 ggsave("./Fig/Blastidt.png",width=5.5,height=3.5,unit="cm",dpi=600)
 
-gghistogram(BLAST_filtered, x = "pident",
-            #add = "mean", 
-            fill="#0097D1",
-            color='white') +
-  scale_y_continuous(position="right") +
-  theme_bw(base_size = 10) +
-  labs(x="BLAST identity (%)", y= "No. of ASVs")+
-  theme(axis.title.x = element_text(angle=180),
-        axis.text.x = element_text(angle=270,vjust=0.5),
-        axis.text.y = element_text(angle=270))
-ggsave("./Fig/Blastidt135.png",width=5.5,height=3.5,unit="cm",dpi=600)
 
-#palette = c("#00AFBB", "#E7B800"))
+
